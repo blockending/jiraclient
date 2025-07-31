@@ -1,4 +1,4 @@
-# JiraClient
+# metricsaggregator
 
 This repository hosts several small .NET HTTP client libraries and a sample console application. Each client targets a different service and is designed following SOLID principles with interfaces that can be easily consumed or mocked in other projects.
 
