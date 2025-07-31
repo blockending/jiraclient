@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JiraClient.Sample;
+namespace GitHubClient;
 
 public class GitHubRepo
 {

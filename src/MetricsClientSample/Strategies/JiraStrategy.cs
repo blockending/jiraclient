@@ -3,7 +3,7 @@ using System.Text.Json;
 using JiraClient;
 using JiraClient.Mapping;
 
-namespace JiraClient.Sample.Strategies;
+namespace MetricsClientSample.Strategies;
 
 public class JiraStrategy : IApiClientStrategy
 {

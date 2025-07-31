@@ -1,28 +1,26 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Json;
+using GitHubClient;
 using System.Text.Json;
+using System.Threading.Tasks;
 using JiraClient.Mapping;
-using JiraClient.Sample;
+using MetricsClientSample;
 
-namespace JiraClient.Sample.Strategies;
+namespace MetricsClientSample.Strategies;
 
 public class GitHubStrategy : IApiClientStrategy
 {
-    private readonly HttpClient _httpClient;
+    private readonly IGitHubClient _client;
     private readonly DynamicMappingService _mapper;
 
-    public GitHubStrategy(HttpClient httpClient, DynamicMappingService mapper)
+    public GitHubStrategy(IGitHubClient client, DynamicMappingService mapper)
     {
-        _httpClient = httpClient;
+        _client = client;
         _mapper = mapper;
     }
 
     public async Task RunAsync()
     {
-        var response = await _httpClient.GetAsync("repos/dotnet/runtime");
-        response.EnsureSuccessStatusCode();
-        var repo = await response.Content.ReadFromJsonAsync<GitHubRepo>();
+        var repo = await _client.GetRepoAsync("dotnet", "runtime");
         if (repo is not null)
         {
             var mapped = _mapper.Map<UnifiedIssue>("github", repo);
