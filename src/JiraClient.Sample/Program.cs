@@ -18,4 +18,7 @@ var host = builder.Build();
 var client = host.Services.GetRequiredService<IJiraClient>();
 
 var issue = await client.GetIssueAsync("TEST-1");
-Console.WriteLine(issue);
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(issue, new System.Text.Json.JsonSerializerOptions
+{
+    WriteIndented = true
+}));
