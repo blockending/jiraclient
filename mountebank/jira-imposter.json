@@ -1,0 +1,20 @@
+{
+  "port": 4545,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/rest/api/2/issue/TEST-1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": "{\"key\":\"TEST-1\",\"fields\":{}}"
+          }
+        }
+      ]
+    }
+  ]
+}
