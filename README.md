@@ -21,6 +21,28 @@ Environment specific configuration files are used:
 
 Both files expose a `Jira:BaseUrl` setting that the library reads via dependency injection.
 
+## Configuring Authentication
+
+Authentication is performed using OAuth. Provide the OAuth settings under
+`Jira:OAuth` in your configuration file or as environment variables. A typical
+configuration section looks like:
+
+```json
+"Jira": {
+  "BaseUrl": "https://your.jira.server",
+  "OAuth": {
+    "TokenUrl": "https://your.jira.server/oauth/token",
+    "ClientId": "your-client-id",
+    "ClientSecret": "your-client-secret",
+    "RefreshToken": "your-refresh-token"
+  }
+}
+```
+
+`Host.CreateDefaultBuilder` reads environment variables as well, so values such
+as `Jira__OAuth__ClientId` or `Jira__OAuth__RefreshToken` can be supplied at
+runtime without modifying the JSON files.
+
 ## Running the Sample
 
 1. **Start the mock Jira service** using [Mountebank](http://www.mbtest.org/):
