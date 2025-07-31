@@ -59,4 +59,20 @@ public class GitHubClientTests
         // assert
         Assert.Contains("metricsclientsample", recordingHandler.LastRequest!.Headers.UserAgent.ToString());
     }
+
+    [Fact]
+    public async Task AuthorizationHeader_IsAdded_WhenPatProvided()
+    {
+        var recordingHandler = new RecordingHandler();
+        var patHandler = new PatHttpMessageHandler(Microsoft.Extensions.Options.Options.Create(new GitHubOptions { PersonalAccessToken = "abc" }))
+        {
+            InnerHandler = recordingHandler
+        };
+        var httpClient = new HttpClient(patHandler);
+        var client = new GitHubClientImpl(httpClient);
+
+        await client.GetRepoAsync("octocat", "repo");
+
+        Assert.Equal("token abc", recordingHandler.LastRequest!.Headers.Authorization!.ToString());
+    }
 }

@@ -42,4 +42,31 @@ public class PagerDutyClientTests
         // assert
         Assert.Equal("https://status.pagerduty.com/api/v2/", httpClient.BaseAddress!.ToString());
     }
+
+    private class RecordingHandler : HttpMessageHandler
+    {
+        public HttpRequestMessage? LastRequest { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            LastRequest = request;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{}") });
+        }
+    }
+
+    [Fact]
+    public async Task AuthorizationHeader_IsAdded_WhenApiKeyProvided()
+    {
+        var recordingHandler = new RecordingHandler();
+        var apiHandler = new ApiKeyHttpMessageHandler(Microsoft.Extensions.Options.Options.Create(new PagerDutyOptions { ApiKey = "xyz" }))
+        {
+            InnerHandler = recordingHandler
+        };
+        var httpClient = new HttpClient(apiHandler);
+        var client = new PagerDutyClientImpl(httpClient);
+
+        await client.GetIncidentsAsync();
+
+        Assert.Equal("Token token=xyz", recordingHandler.LastRequest!.Headers.Authorization!.ToString());
+    }
 }
