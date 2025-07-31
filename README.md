@@ -45,15 +45,16 @@ runtime without modifying the JSON files.
 
 ## Running the Sample
 
-1. **Start the mock Jira service** using [Mountebank](http://www.mbtest.org/):
+1. **Start the mock services** using [Mountebank](http://www.mbtest.org/):
    ```bash
    cd mountebank
    ./start-mountebank.sh
    ```
-   The imposter requires an `Authorization` header bearing a token. It also
-   determines the HTTP status code from the requested issue key. Requesting
-   `TEST-200` yields a `200` response, `TEST-404` returns `404`, and so on. The
-   predefined issue `TEST-1` continues to return `200`.
+   This launches local mocks for Jira (port `4545`), GitHub (`4546`) and
+   PagerDuty (`4547`). The Jira imposter requires an `Authorization` header
+   bearing a token and determines the HTTP status code from the requested issue
+   key. Requesting `TEST-200` yields a `200` response, `TEST-404` returns `404`,
+   and so on. The predefined issue `TEST-1` continues to return `200`.
 2. **Run the console app** from Visual Studio or Rider:
    - Open the solution `JiraClient.sln`.
    - Set `JiraClient.Sample` as the startup project.

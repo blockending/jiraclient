@@ -1,0 +1,76 @@
+{
+  "imposters": [
+    {
+      "port": 4545,
+      "protocol": "http",
+      "stubs": [
+        {
+          "predicates": [
+            { "equals": { "method": "GET", "path": "/rest/api/2/issue/TEST-1" } },
+            { "matches": { "headers": { "Authorization": "Bearer .*" } } }
+          ],
+          "responses": [
+            {
+              "is": {
+                "statusCode": 200,
+                "headers": { "Content-Type": "application/json" },
+                "body": "{\"key\":\"TEST-1\",\"fields\":{}}"
+              }
+            }
+          ]
+        },
+        {
+          "predicates": [
+            { "matches": { "method": "GET", "path": "/rest/api/2/issue/TEST-(\\d\\d\\d)" } },
+            { "matches": { "headers": { "Authorization": "Bearer .*" } } }
+          ],
+          "responses": [
+            {
+              "inject": "function (req) { var m = req.path.match(/TEST-(\\d\\d\\d)/); var code = parseInt(m[1]); return { statusCode: code, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'TEST-' + code, fields: {} }) }; }"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port": 4546,
+      "protocol": "http",
+      "stubs": [
+        {
+          "predicates": [
+            { "equals": { "method": "GET", "path": "/repos/dotnet/runtime" } }
+          ],
+          "responses": [
+            {
+              "is": {
+                "statusCode": 200,
+                "headers": { "Content-Type": "application/json" },
+                "body": "{\"id\":1,\"name\":\"runtime\",\"full_name\":\"dotnet/runtime\",\"visibility\":\"public\"}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port": 4547,
+      "protocol": "http",
+      "stubs": [
+        {
+          "predicates": [
+            { "equals": { "method": "GET", "path": "/incidents.json" } }
+          ],
+          "responses": [
+            {
+              "is": {
+                "statusCode": 200,
+                "headers": { "Content-Type": "application/json" },
+                "body": "{\"incidents\":[{\"id\":\"abc\",\"status\":\"triggered\",\"summary\":\"Test incident\"}]}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
