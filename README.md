@@ -1,12 +1,16 @@
 # JiraClient
 
-This repository contains a small HTTP client library for Jira along with a sample console application. The client follows SOLID design principles and exposes an `IJiraClient` interface for consumers.
+This repository hosts several small .NET HTTP client libraries and a sample console application. Each client targets a different service and is designed following SOLID principles with interfaces that can be easily consumed or mocked in other projects.
 
 ## Projects
 
-- **JiraClient** – .NET class library that wraps minimal Jira REST API calls.
-- **MetricsClientSample** – console application demonstrating usage of the client.
-- **JiraClient.Tests** – xUnit test project.
+The solution is composed of several libraries and associated test projects:
+
+- **JiraClient** – minimal wrapper around the Jira REST API.
+- **GitHubClient** – tiny client for the GitHub REST API.
+- **PagerDutyClient** – simple client for the PagerDuty status API.
+- **MetricsClientSample** – console application demonstrating the clients and the dynamic mapping service.
+- **JiraClient.Tests**, **GitHubClient.Tests**, **PagerDutyClient.Tests** – xUnit projects covering the libraries.
 
 ## Jira API Reference
 
@@ -14,12 +18,15 @@ The Jira REST API is documented at [Atlassian's developer site](https://develope
 
 ## Configuration
 
-Environment specific configuration files are used:
+The sample console app uses environment specific configuration files:
 
-- `appsettings.Development.json` – points the client at the local Mountebank mock (`http://localhost:4545`).
-- `appsettings.Production.json` – example production URL placeholder.
+- `appsettings.Development.json` – points the Jira client at the local mock service (`http://localhost:4545`).
+- `appsettings.Production.json` – example production values.
 
-Both files expose a `Jira:BaseUrl` setting that the library reads via dependency injection.
+Each file contains a `Jira` section with the base URL and OAuth settings and a
+`Mappings` section used by `DynamicMappingService` to translate the raw API
+models into a unified shape. Values can also be supplied via environment
+variables when running the application.
 
 ## Configuring Authentication
 
@@ -42,6 +49,20 @@ configuration section looks like:
 `Host.CreateDefaultBuilder` reads environment variables as well, so values such
 as `Jira__OAuth__ClientId` or `Jira__OAuth__RefreshToken` can be supplied at
 runtime without modifying the JSON files.
+
+## Service Mocks
+
+The folder `mountebank` contains an `imposters.json` file describing HTTP mocks
+for the three services and a helper script `start-mountebank.sh` that launches
+[Mountebank](http://www.mbtest.org/) with those definitions. The mocks run on
+the following ports:
+
+- `4545` – Jira API
+- `4546` – GitHub API
+- `4547` – PagerDuty API
+
+The Jira imposter inspects the requested issue key to determine the HTTP status
+code (e.g. requesting `TEST-404` returns a `404` response).
 
 ## Running the Sample
 
