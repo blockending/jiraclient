@@ -5,20 +5,13 @@ using System.Threading.Tasks;
 using JiraClient;
 using Microsoft.Extensions.Options;
 using Xunit;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using Moq;
+using Moq.Protected;
 
 public class JiraClientTests
 {
-    private class FakeHandler : HttpMessageHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent("{\"key\":\"TEST-1\"}")
-            };
-            return Task.FromResult(response);
-        }
-    }
 
     private class RecordingHandler : HttpMessageHandler
     {
@@ -43,8 +36,19 @@ public class JiraClientTests
     [Fact]
     public async Task GetIssueAsync_ReturnsContent()
     {
-        var handler = new FakeHandler();
-        var httpClient = new HttpClient(handler);
+        var fixture = new Fixture().Customize(new AutoMoqCustomization());
+        var handlerMock = fixture.Create<Mock<HttpMessageHandler>>();
+        handlerMock.Protected()
+                   .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>())
+                   .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+                   {
+                       Content = new StringContent("{\"key\":\"TEST-1\"}")
+                   });
+
+        var httpClient = new HttpClient(handlerMock.Object);
         var options = Options.Create(new JiraOptions { BaseUrl = "http://localhost" });
         var client = new JiraClientImpl(httpClient, options);
 
