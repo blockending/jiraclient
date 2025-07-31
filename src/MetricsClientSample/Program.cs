@@ -21,8 +21,8 @@ var builder = Host.CreateDefaultBuilder(args)
     {
         services.AddJiraClient(context.Configuration);
         services.AddDynamicMapping(context.Configuration);
-        services.AddGitHubClient();
-        services.AddPagerDutyClient();
+        services.AddGitHubClient(context.Configuration);
+        services.AddPagerDutyClient(context.Configuration);
         services.AddTransient<JiraStrategy>();
         services.AddTransient<IApiClientStrategy>(sp =>
         {
