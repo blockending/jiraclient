@@ -1,2 +1,2 @@
 #!/bin/bash
-npx mb start --allowInjection --configfile jira-imposter.json
+npx mb start --allowInjection --configfile imposters.json
