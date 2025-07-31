@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using JiraClient;
-using JiraClient.Sample.Strategies;
+using MetricsClientSample.Strategies;
+using GitHubClient;
+using PagerDutyClient;
 using JiraClient.Mapping;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,15 +21,8 @@ var builder = Host.CreateDefaultBuilder(args)
     {
         services.AddJiraClient(context.Configuration);
         services.AddDynamicMapping(context.Configuration);
-        services.AddHttpClient<GitHubStrategy>(c =>
-        {
-            c.BaseAddress = new Uri("https://api.github.com/");
-            c.DefaultRequestHeaders.UserAgent.ParseAdd("jiraclient-sample");
-        });
-        services.AddHttpClient<PagerDutyStrategy>(c =>
-        {
-            c.BaseAddress = new Uri("https://status.pagerduty.com/api/v2/");
-        });
+        services.AddGitHubClient();
+        services.AddPagerDutyClient();
         services.AddTransient<JiraStrategy>();
         services.AddTransient<IApiClientStrategy>(sp =>
         {

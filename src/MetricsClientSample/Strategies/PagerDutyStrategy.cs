@@ -1,29 +1,27 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Json;
+using PagerDutyClient;
 using System.Text.Json;
 using System.Linq;
+using System.Threading.Tasks;
 using JiraClient.Mapping;
-using JiraClient.Sample;
+using MetricsClientSample;
 
-namespace JiraClient.Sample.Strategies;
+namespace MetricsClientSample.Strategies;
 
 public class PagerDutyStrategy : IApiClientStrategy
 {
-    private readonly HttpClient _httpClient;
+    private readonly IPagerDutyClient _client;
     private readonly DynamicMappingService _mapper;
 
-    public PagerDutyStrategy(HttpClient httpClient, DynamicMappingService mapper)
+    public PagerDutyStrategy(IPagerDutyClient client, DynamicMappingService mapper)
     {
-        _httpClient = httpClient;
+        _client = client;
         _mapper = mapper;
     }
 
     public async Task RunAsync()
     {
-        var response = await _httpClient.GetAsync("incidents.json");
-        response.EnsureSuccessStatusCode();
-        var incidentList = await response.Content.ReadFromJsonAsync<PagerDutyIncidentList>();
+        var incidentList = await _client.GetIncidentsAsync();
         var incident = incidentList?.Incidents.FirstOrDefault();
         if (incident is not null)
         {

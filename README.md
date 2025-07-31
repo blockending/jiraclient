@@ -5,7 +5,7 @@ This repository contains a small HTTP client library for Jira along with a sampl
 ## Projects
 
 - **JiraClient** – .NET class library that wraps minimal Jira REST API calls.
-- **JiraClient.Sample** – console application demonstrating usage of the client.
+- **MetricsClientSample** – console application demonstrating usage of the client.
 - **JiraClient.Tests** – xUnit test project.
 
 ## Jira API Reference
@@ -57,7 +57,7 @@ runtime without modifying the JSON files.
    and so on. The predefined issue `TEST-1` continues to return `200`.
 2. **Run the console app** from Visual Studio or Rider:
    - Open the solution `JiraClient.sln`.
-   - Set `JiraClient.Sample` as the startup project.
+   - Set `MetricsClientSample` as the startup project.
    - Run the application. It will fetch the issue `TEST-1` from the mock service and print the JSON.
 
 ## Azure DevOps Build

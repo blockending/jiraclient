@@ -1,4 +1,4 @@
-namespace JiraClient.Sample;
+namespace MetricsClientSample;
 
 public class UnifiedIssue
 {
