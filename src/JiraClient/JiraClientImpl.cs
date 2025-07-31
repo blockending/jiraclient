@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
@@ -22,10 +23,13 @@ public class JiraClientImpl : IJiraClient
         _httpClient.BaseAddress = new System.Uri(_options.BaseUrl);
     }
 
-    public async Task<string> GetIssueAsync(string issueKey)
+    public async Task<JiraIssue> GetIssueAsync(string issueKey)
     {
         var response = await _httpClient.GetAsync($"/rest/api/2/issue/{issueKey}");
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+
+        await using var stream = await response.Content.ReadAsStreamAsync();
+        var issue = await JsonSerializer.DeserializeAsync<JiraIssue>(stream) ?? new JiraIssue();
+        return issue;
     }
 }

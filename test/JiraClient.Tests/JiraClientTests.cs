@@ -53,7 +53,7 @@ public class JiraClientTests
         var client = new JiraClientImpl(httpClient, options);
 
         var result = await client.GetIssueAsync("TEST-1");
-        Assert.Contains("TEST-1", result);
+        Assert.Equal("TEST-1", result.Key);
     }
 
     [Fact]
