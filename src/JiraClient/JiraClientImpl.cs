@@ -7,6 +7,7 @@ namespace JiraClient;
 public class JiraOptions
 {
     public string BaseUrl { get; set; } = string.Empty;
+    public OAuthOptions OAuth { get; set; } = new();
 }
 
 public class JiraClientImpl : IJiraClient
