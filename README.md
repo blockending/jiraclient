@@ -35,5 +35,5 @@ Both files expose a `Jira:BaseUrl` setting that the library reads via dependency
 
 ## Azure DevOps Build
 
-An example Azure pipeline is provided in `azure-pipelines.yml`. It restores, builds and runs the unit tests using the .NET 6 SDK.
+An example Azure pipeline is provided in `azure-pipelines.yml`. It restores, builds and runs the unit tests using the .NET 8 SDK.
 
