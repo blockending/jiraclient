@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using JiraClient;
 using JiraClient.Sample.Strategies;
+using JiraClient.Mapping;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +18,7 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddJiraClient(context.Configuration);
+        services.AddDynamicMapping(context.Configuration);
         services.AddHttpClient<GitHubStrategy>(c =>
         {
             c.BaseAddress = new Uri("https://api.github.com/");
