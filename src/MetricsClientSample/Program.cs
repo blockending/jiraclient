@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using JiraClient;
-using MetricsClientSample.Strategies;
 using GitHubClient;
 using PagerDutyClient;
+using MetricsClientSample.Factory;
 using JiraClient.Mapping;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,18 +23,38 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddDynamicMapping(context.Configuration);
         services.AddGitHubClient(context.Configuration);
         services.AddPagerDutyClient(context.Configuration);
-        services.AddTransient<JiraStrategy>();
-        services.AddTransient<IApiClientStrategy>(sp =>
-        {
-            return serviceChoice switch
-            {
-                "github" => sp.GetRequiredService<GitHubStrategy>(),
-                "pagerduty" => sp.GetRequiredService<PagerDutyStrategy>(),
-                _ => sp.GetRequiredService<JiraStrategy>()
-            };
-        });
+        services.AddSingleton<IApiClientFactory, ApiClientFactory>();
     });
 
 var host = builder.Build();
-var strategy = host.Services.GetRequiredService<IApiClientStrategy>();
-await strategy.RunAsync();
+var factory = host.Services.GetRequiredService<IApiClientFactory>();
+var mapper = host.Services.GetRequiredService<DynamicMappingService>();
+
+switch (serviceChoice)
+{
+    case "github":
+        var ghClient = (IGitHubClient)factory.CreateClient("github");
+        var repo = await ghClient.GetRepoAsync("dotnet", "runtime");
+        if (repo is not null)
+        {
+            var mapped = mapper.Map<UnifiedIssue>("github", repo);
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mapped, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        }
+        break;
+    case "pagerduty":
+        var pdClient = (IPagerDutyClient)factory.CreateClient("pagerduty");
+        var incidentList = await pdClient.GetIncidentsAsync();
+        var incident = incidentList?.Incidents.FirstOrDefault();
+        if (incident is not null)
+        {
+            var mapped = mapper.Map<UnifiedIssue>("pagerduty", incident);
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mapped, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        }
+        break;
+    default:
+        var jiraClient = (IJiraClient)factory.CreateClient("jira");
+        var issue = await jiraClient.GetIssueAsync("TEST-1");
+        var mappedIssue = mapper.Map<UnifiedIssue>("jira", issue);
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mappedIssue, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        break;
+}
