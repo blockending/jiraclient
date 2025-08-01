@@ -25,4 +25,11 @@ public class GitHubClientImpl : IGitHubClient
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<GitHubRepo>();
     }
+
+    public async Task<string> GetRawAsync(string path)
+    {
+        var response = await _httpClient.GetAsync(path);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
 }

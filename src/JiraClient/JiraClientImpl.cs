@@ -32,4 +32,11 @@ public class JiraClientImpl : IJiraClient
         var issue = await JsonSerializer.DeserializeAsync<JiraIssue>(stream) ?? new JiraIssue();
         return issue;
     }
+
+    public async Task<string> GetRawAsync(string path)
+    {
+        var response = await _httpClient.GetAsync(path);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
 }
