@@ -89,3 +89,7 @@ code (e.g. requesting `TEST-404` returns a `404` response).
 
 An example Azure pipeline is provided in `azure-pipelines.yml`. It restores, builds and runs the unit tests using the .NET 8 SDK.
 
+
+## License
+
+This project is licensed under the MIT No Attribution (MIT-0) license. See the [LICENSE](LICENSE) file for details.
