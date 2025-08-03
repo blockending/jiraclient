@@ -15,8 +15,7 @@ var metricChoice = args.FirstOrDefault()?.ToLowerInvariant();
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        config.AddJsonFile("appsettings.Development.json", optional: true)
-              .AddJsonFile("appsettings.Production.json", optional: true);
+        config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true); 
     })
     .ConfigureServices((context, services) =>
     {
