@@ -5,6 +5,7 @@
     "ghcr.io/devcontainers/features/node:1": {}
   },
   "postCreateCommand": "dotnet restore",
+  "postStartCommand": "cd mountebank && ./start-mountebank.sh &",
   "customizations": {
     "vscode": {
       "extensions": [
