@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace JiraClient;
 
-internal class OAuthHttpMessageHandler : DelegatingHandler
+public class OAuthHttpMessageHandler : DelegatingHandler
 {
     private readonly IOAuthTokenProvider _tokenProvider;
 

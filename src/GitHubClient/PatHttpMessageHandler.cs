@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace GitHubClient;
 
-internal class PatHttpMessageHandler : DelegatingHandler
+public class PatHttpMessageHandler : DelegatingHandler
 {
     private readonly GitHubOptions _options;
 
