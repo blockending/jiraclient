@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MetricsClientSample Debug",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/MetricsClientSample/bin/Debug/net8.0/MetricsClientSample.dll",
+      "args": ["github-branch-count"],
+      "cwd": "${workspaceFolder}/src/MetricsClientSample",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ]
+}
