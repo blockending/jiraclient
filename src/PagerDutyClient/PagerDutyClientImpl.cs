@@ -21,4 +21,11 @@ public class PagerDutyClientImpl : IPagerDutyClient
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<PagerDutyIncidentList>();
     }
+
+    public async Task<string> GetRawAsync(string path)
+    {
+        var response = await _httpClient.GetAsync(path);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
 }

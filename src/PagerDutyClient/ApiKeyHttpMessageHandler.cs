@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace PagerDutyClient;
 
-internal class ApiKeyHttpMessageHandler : DelegatingHandler
+public class ApiKeyHttpMessageHandler : DelegatingHandler
 {
     private readonly PagerDutyOptions _options;
 

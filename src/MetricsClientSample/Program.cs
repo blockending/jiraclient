@@ -4,12 +4,13 @@ using JiraClient;
 using GitHubClient;
 using PagerDutyClient;
 using MetricsClientSample.Factory;
+using MetricsClientSample;
 using JiraClient.Mapping;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var serviceChoice = args.FirstOrDefault()?.ToLowerInvariant();
+var metricChoice = args.FirstOrDefault()?.ToLowerInvariant();
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
@@ -24,37 +25,30 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddGitHubClient(context.Configuration);
         services.AddPagerDutyClient(context.Configuration);
         services.AddSingleton<IApiClientFactory, ApiClientFactory>();
+        services.AddSingleton<IMetricLogger, SyslogMetricLogger>();
     });
 
 var host = builder.Build();
 var factory = host.Services.GetRequiredService<IApiClientFactory>();
-var mapper = host.Services.GetRequiredService<DynamicMappingService>();
+var logger = host.Services.GetRequiredService<IMetricLogger>();
+var config = host.Services.GetRequiredService<IConfiguration>();
 
-switch (serviceChoice)
+if (string.IsNullOrWhiteSpace(metricChoice))
 {
-    case "github":
-        var ghClient = (IGitHubClient)factory.CreateClient("github");
-        var repo = await ghClient.GetRepoAsync("dotnet", "runtime");
-        if (repo is not null)
-        {
-            var mapped = mapper.Map<UnifiedIssue>("github", repo);
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mapped, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
-        }
-        break;
-    case "pagerduty":
-        var pdClient = (IPagerDutyClient)factory.CreateClient("pagerduty");
-        var incidentList = await pdClient.GetIncidentsAsync();
-        var incident = incidentList?.Incidents.FirstOrDefault();
-        if (incident is not null)
-        {
-            var mapped = mapper.Map<UnifiedIssue>("pagerduty", incident);
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mapped, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
-        }
-        break;
-    default:
-        var jiraClient = (IJiraClient)factory.CreateClient("jira");
-        var issue = await jiraClient.GetIssueAsync("TEST-1");
-        var mappedIssue = mapper.Map<UnifiedIssue>("jira", issue);
-        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(mappedIssue, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
-        break;
+    Console.WriteLine("Please provide a metric profile name.");
+    return;
+}
+
+var profile = config.GetSection($"MetricProfiles:{metricChoice}").Get<MetricProfile>();
+if (profile is null)
+{
+    Console.WriteLine($"Metric profile '{metricChoice}' not found.");
+    return;
+}
+
+var client = (dynamic)factory.CreateClient(profile.Client);
+foreach (var endpoint in profile.Endpoints)
+{
+    var raw = await client.GetRawAsync(endpoint);
+    logger.Log(metricChoice, raw);
 }

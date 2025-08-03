@@ -10,4 +10,5 @@ public interface IJiraClient
     /// <param name="issueKey">The issue key, e.g. "TEST-1".</param>
     /// <returns>The deserialized <see cref="JiraIssue"/>.</returns>
     Task<JiraIssue> GetIssueAsync(string issueKey);
+    Task<string> GetRawAsync(string path);
 }
