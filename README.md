@@ -54,6 +54,38 @@ For GitHub and PagerDuty, supply `GitHub:PersonalAccessToken` and `PagerDuty:Api
 in the configuration (or as environment variables `GitHub__PersonalAccessToken`
 and `PagerDuty__ApiKey`) to authenticate requests.
 
+## Metric Profiles
+
+Metric profiles describe which client, endpoints, and fields the sample
+application should query. Profiles are defined in the `MetricProfiles`
+section of the appsettings files:
+
+```json
+"MetricProfiles": {
+  "github-branch-count": {
+    "Name": "Number of Branches",
+    "Client": "github",
+    "Endpoints": ["repos/dotnet/runtime/branches"],
+    "Properties": ["name"]
+  }
+}
+```
+
+Each profile specifies:
+
+- `Client` – one of `jira`, `github`, or `pagerduty`.
+- `Endpoints` – API paths relative to the chosen client's base address.
+- `Properties` – JSON properties to extract and log from each response.
+
+Run the sample by passing the profile key as the first command-line argument:
+
+```bash
+dotnet run --project src/MetricsClientSample -- github-branch-count
+```
+
+The application will call each endpoint and log the configured properties for
+the selected profile.
+
 ## Service Mocks
 
 The folder `mountebank` contains an `imposters.json` file describing HTTP mocks
