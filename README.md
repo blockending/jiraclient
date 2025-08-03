@@ -54,6 +54,28 @@ For GitHub and PagerDuty, supply `GitHub:PersonalAccessToken` and `PagerDuty:Api
 in the configuration (or as environment variables `GitHub__PersonalAccessToken`
 and `PagerDuty__ApiKey`) to authenticate requests.
 
+## Developer Credentials and API Endpoints
+
+### Jira
+
+Create OAuth credentials for your site in the
+[Atlassian Developer Console](https://developer.atlassian.com/console/myapps/)
+to obtain the client id, client secret, and refresh token. Jira Cloud's REST
+API is served from `https://your-domain.atlassian.net/rest/api/2`.
+
+### GitHub
+
+Generate a personal access token from
+[GitHub's token settings](https://github.com/settings/tokens) with the scopes
+required by your application. The GitHub REST API is available at
+`https://api.github.com`.
+
+### PagerDuty
+
+Create a REST API key in the PagerDuty web UI under
+**Integrations → API Access Keys**. PagerDuty's developer API base URL is
+`https://api.pagerduty.com`.
+
 ## Metric Profiles
 
 Metric profiles describe which client, endpoints, and fields the sample
