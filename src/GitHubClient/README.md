@@ -20,3 +20,27 @@ var repo = await client.GetRepoAsync("octocat", "Hello-World");
 ```
 
 The client defaults the `BaseAddress` to `https://api.github.com/` and adds a `User-Agent` header if one is not provided.  If a `GitHub:PersonalAccessToken` value is supplied in configuration, an `Authorization` header is automatically added to each request.
+
+## Metric Profiles
+
+The `MetricsClientSample` project can drive this client using metric profiles
+defined in the `MetricProfiles` section of `appsettings.*.json`.
+Each profile identifies the client to use, the endpoints to call, and the
+JSON properties to log.
+
+```json
+"MetricProfiles": {
+  "github-branch-count": {
+    "Name": "Number of Branches",
+    "Client": "github",
+    "Endpoints": ["repos/dotnet/runtime/branches"],
+    "Properties": ["name"]
+  }
+}
+```
+
+Run the sample with:
+
+```bash
+dotnet run --project src/MetricsClientSample -- github-branch-count
+```
