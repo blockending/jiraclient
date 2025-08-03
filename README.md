@@ -135,7 +135,7 @@ code (e.g. requesting `TEST-404` returns a `404` response).
    key. Requesting `TEST-200` yields a `200` response, `TEST-404` returns `404`,
    and so on. The predefined issue `TEST-1` continues to return `200`.
 2. **Run the console app** from Visual Studio or Rider:
-   - Open the solution `JiraClient.sln`.
+   - Open the solution `metricsaggregator.sln`.
    - Set `MetricsClientSample` as the startup project.
    - Run the application. It will fetch the issue `TEST-1` from the mock service and print the JSON.
 
