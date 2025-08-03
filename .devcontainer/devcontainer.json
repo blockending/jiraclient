@@ -11,5 +11,8 @@
         "ms-dotnettools.csharp"
       ]
     }
+  },
+  "containerEnv": {
+    "DOTNET_ENVIRONMENT": "Development"
   }
 }
