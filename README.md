@@ -50,9 +50,10 @@ configuration section looks like:
 as `Jira__OAuth__ClientId` or `Jira__OAuth__RefreshToken` can be supplied at
 runtime without modifying the JSON files.
 
-For GitHub and PagerDuty, supply `GitHub:PersonalAccessToken` and `PagerDuty:ApiKey`
-in the configuration (or as environment variables `GitHub__PersonalAccessToken`
-and `PagerDuty__ApiKey`) to authenticate requests.
+For GitHub and PagerDuty, supply `GitHub:BaseUrl`, `GitHub:PersonalAccessToken`,
+`PagerDuty:BaseUrl`, and `PagerDuty:ApiKey` in the configuration (or as environment
+variables `GitHub__BaseUrl`, `GitHub__PersonalAccessToken`, `PagerDuty__BaseUrl`,
+and `PagerDuty__ApiKey`) to configure endpoints and authenticate requests.
 
 ## Developer Credentials and API Endpoints
 

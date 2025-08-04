@@ -19,7 +19,7 @@ Fetch repository information with `GetRepoAsync`:
 var repo = await client.GetRepoAsync("octocat", "Hello-World");
 ```
 
-The client defaults the `BaseAddress` to `https://api.github.com/` and adds a `User-Agent` header if one is not provided.  If a `GitHub:PersonalAccessToken` value is supplied in configuration, an `Authorization` header is automatically added to each request.
+The client defaults the `BaseAddress` to `https://api.github.com/` and adds a `User-Agent` header if one is not provided. Setting a `GitHub:BaseUrl` configuration value overrides the base address. If a `GitHub:PersonalAccessToken` value is supplied, an `Authorization` header is automatically added to each request.
 
 ## Metric Profiles
 

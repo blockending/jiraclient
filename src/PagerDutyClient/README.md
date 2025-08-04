@@ -19,7 +19,7 @@ Retrieve current incidents with `GetIncidentsAsync`:
 var incidents = await client.GetIncidentsAsync();
 ```
 
-The HTTP client's base address defaults to `https://status.pagerduty.com/api/v2/` if not set. If a `PagerDuty:ApiKey` is configured, an `Authorization` header is added using the `Token token=` format.
+The HTTP client's base address defaults to `https://status.pagerduty.com/api/v2/` if not set. Providing a `PagerDuty:BaseUrl` configuration value overrides the base address. If a `PagerDuty:ApiKey` is configured, an `Authorization` header is added using the `Token token=` format.
 
 ## Metric Profiles
 
