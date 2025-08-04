@@ -2,7 +2,8 @@
   "name": "Metrics Aggregator Dev Container",
   "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/mountebank:1": {}
   },
   "postCreateCommand": "dotnet restore",
   "postStartCommand": "cd mountebank && ./start-mountebank.sh &",
